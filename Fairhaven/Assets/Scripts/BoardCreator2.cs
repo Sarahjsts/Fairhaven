@@ -8,9 +8,9 @@ public class BoardCreator2 : MonoBehaviour
     private GameObject boardHolder;
     // Start is called before the first frame update
 
-
-    public int width = 40;
-    public int height = 40;
+    public static int ID = 0;
+    public static int width = 15;
+    public static int height = 15;
     public int chanceToStartAlive = 45;
     public int delete = 3;
     public int create = 3;
@@ -18,7 +18,10 @@ public class BoardCreator2 : MonoBehaviour
     public GameObject[] innerWall;
     public GameObject[] outerWall;
     public GameObject[] floor;
+    public GameObject[] enemies;
     public GameObject exit;
+    public static  int enemyCount;
+    public bool won = false;
     bool[,] board;
 
  
@@ -32,6 +35,11 @@ public class BoardCreator2 : MonoBehaviour
         }
      
         BoardTiles();
+        LayoutObjectAtRandom(enemies, 2, 2);
+    }
+    private void Awake()
+    {
+        Win();
     }
     // creates a 2d array with values of either true or false depending on a random number
     public void CreateBoard() {
@@ -64,11 +72,9 @@ public class BoardCreator2 : MonoBehaviour
                         }
                     }
                 }
-        Vector3 position = new Vector3(width-1, height-1, 0f);
 
-        // places exit tile
-        GameObject tileInstance = Instantiate(exit, position, Quaternion.identity) as GameObject;
         InstantiateOuterWalls();
+
 
     }
 
@@ -133,6 +139,33 @@ public class BoardCreator2 : MonoBehaviour
         }
         return newBoard;
     }
+    Vector3 RandomPosition()
+    {
+        
+        int randomX = Random.Range(4, width);
+        int randomY = Random.Range(4, height);
+       
+        Vector3 randomPosition = new Vector3(randomX, randomY);
+
+        return randomPosition;
+    }
+
+
+    //LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
+    void LayoutObjectAtRandom(GameObject[] tileArray, int minimum, int maximum)
+    {
+        //Choose a random number of objects to instantiate within the minimum and maximum limits
+        enemyCount = Random.Range(minimum, maximum + 1);
+
+        //Instantiate objects until the randomly chosen limit objectCount is reached
+        for (int i = 0; i < enemyCount; i++)
+        {
+           
+            Vector3 randomPosition = RandomPosition();
+            GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
+            Instantiate(tileChoice, randomPosition, Quaternion.identity);
+        }
+    }
     //puts outer wall on level
     void InstantiateOuterWalls()
     {
@@ -191,6 +224,7 @@ public class BoardCreator2 : MonoBehaviour
 
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, 0f);
+        
 
         // Create an instance of the prefab from the random index of the array.
         GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
@@ -198,4 +232,15 @@ public class BoardCreator2 : MonoBehaviour
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
     }
+    void Win()
+    {
+        
+        if (BoardCreator2.enemyCount <= 0 && !won)
+        {
+            Debug.Log(BoardCreator2.enemyCount);
+            exit.SetActive(true);
+            won = true;
+        }
+    }
+
 }

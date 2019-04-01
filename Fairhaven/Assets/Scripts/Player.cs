@@ -10,17 +10,33 @@ public class Player : MonoBehaviour
     public float moveSpeed = 20f;
     public float horizontal;
     public float vertical;
-    public float playerHP = 100;
+    public int hp = 100;
+    static public int playerHP = 100;
+   static public int playerMP;
+   static public int Att;
+   static public int Def;
+   static public int Mag;
+   static public int Mdef;
+    public GameObject gameOver;
+
     public Slider HPbar;
-    public bool isDead;
+    public Slider targetBar;
+    public GameObject holder;
+    public Transform position;
+    public static bool isDead;
+    public bool targeted = false;
     public bool damaged;
     float moveLimiter = 0.7f;
 
-    private Animator animator;
+    private Animator anim;
+    public float range;
+    public LayerMask enemies;
+
     // Start is called before the first frame update
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
 
@@ -28,6 +44,7 @@ public class Player : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
+
     }
     // moves character
     private void FixedUpdate()
@@ -42,16 +59,21 @@ public class Player : MonoBehaviour
     }
 
     //damage to player
-    public void takeDamage(float damage)
+    public void TakeDamage(float damage)
     {
-        if (damaged)
+        if(playerHP > 0)
         {
-            playerHP -= damage;
+            playerHP -= (int)damage;
             HPbar.value = playerHP;
-        }
-        if(playerHP == 0)
+        }else 
         {
             isDead = true;
+            if (isDead)
+
+                Time.timeScale = 0;
+            gameOver.SetActive(true);
+            }
         }
-    }
+
 }
+

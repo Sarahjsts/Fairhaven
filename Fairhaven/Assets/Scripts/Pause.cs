@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using Mono.Data.SqliteClient;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pause : MonoBehaviour
 {
     public bool paused;
     public GameObject pauseMenu;
+
 
     private void Update()
     {
@@ -13,6 +19,7 @@ public class Pause : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             PauseMenu();
+            
         }
     }
     public void PauseMenu()
@@ -28,11 +35,7 @@ public class Pause : MonoBehaviour
         }
         
     }
-    // writes game save to database
-    public void Save()
-    {
 
-    }
 
     // opens options menu
     public void Options()

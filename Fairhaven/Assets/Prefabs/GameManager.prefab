@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5971156270751605167}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.768236, y: 13.564385, z: -3.0234375}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,8 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e357cc6035e2ce844adfecd054f3e3ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 40
-  height: 40
+  chanceToStartAlive: 45
   delete: 3
   create: 3
   numSteps: 2
@@ -54,3 +53,4 @@ MonoBehaviour:
   - {fileID: 191234552731046854, guid: 3c70b9b1bd660494f96c6bc9008b1e9f, type: 3}
   floor:
   - {fileID: 6328918472717450411, guid: 880ea06d64b444443a679a2997133fbc, type: 3}
+  enemies: []

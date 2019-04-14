@@ -26,7 +26,7 @@ public class EnemyAttack : MonoBehaviour
             {
                 Debug.Log("damaged");
                 Collider2D collision = Physics2D.OverlapCircle(position.position, range, enemies);
-                collision.GetComponent<Player>().TakeDamage(dmg);
+                //collision.GetComponent<Player>().TakeDamage(dmg);
                 Player.playerHP -= dmg;
                 //Debug.Log(Player.playerHP);
 

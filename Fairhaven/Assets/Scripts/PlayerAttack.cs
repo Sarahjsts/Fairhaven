@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public Transform position;
     public LayerMask enemies;
     public float range;
-    public int dmg;
+    public int dmg = Player.Att;
 
     // Update is called once per frame
     void Update()
@@ -22,7 +22,7 @@ public class PlayerAttack : MonoBehaviour
                 Collider2D[] dmgEnemies = Physics2D.OverlapCircleAll(position.position, range, enemies);
                 for(int i = 0; i < dmgEnemies.Length; i++)
                 {
-                    dmgEnemies[i].GetComponent<Enemy>().TakeDamage(Player.Att);
+                    dmgEnemies[i].GetComponent<Enemy>().TakeDamage(dmg);
                     Debug.Log(dmgEnemies[i].GetComponent<Enemy>().health);
                 }
             }

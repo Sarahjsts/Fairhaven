@@ -22,30 +22,44 @@ public class BoardCreator2 : MonoBehaviour
     public GameObject exit;
     public static  int enemyCount;
     public bool won = false;
-    bool[,] board;
-
+    public static bool[,] board;
+    helper[,] flooded;
  
     void Start()
     {
-        boardHolder = new GameObject("BoardHolder");
-        CreateBoard();
-        for(int i = 0; i < numSteps; i++)
-        {
-            board = SimStep(board);
-        }
-     
-        BoardTiles();
-        LayoutObjectAtRandom(enemies, 2, 2);
+
     }
     private void Awake()
     {
+        boardHolder = new GameObject("BoardHolder");
+        CreateBoard();
+        for (int i = 0; i < numSteps; i++)
+        {
+            board = SimStep(board);
+        }
+        /*
+         * part of non functioning flood fill
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                    FloodFill(flooded[i, j]);
+
+            }
+        }
+        Fix();
+        */
+        BoardTiles();
+        LayoutObjectAtRandom(enemies, 1, 1);
         Win();
+        
     }
     // creates a 2d array with values of either true or false depending on a random number
     public void CreateBoard() {
         board = new bool[width, height];
-        
-        for(int i = 0; i < width; i++)
+        flooded = new helper[width, height];
+
+        for (int i = 0; i < width; i++)
         {
             for(int j = 0; j < height; j++)
             {
@@ -53,7 +67,8 @@ public class BoardCreator2 : MonoBehaviour
                 if(filled < chanceToStartAlive)
                 {
                     board[i, j] = true;
-                }     
+                }
+                flooded[i, j] = new helper(i,j);
             }
         }
     }
@@ -139,6 +154,51 @@ public class BoardCreator2 : MonoBehaviour
         }
         return newBoard;
     }
+    /*
+    // part of non functioning flood fill.
+    public static List<helper> adjacencyList(helper[,] G, helper node)
+    {
+        List<helper> edges = new List<helper>();
+        if ((node.y + 1) < BoardCreator2.height && !G[node.x, node.y + 1].val)
+        {
+            edges.Add(G[node.x, node.y + 1]);
+        }
+        if ((node.x + 1) < BoardCreator2.width && !G[node.x + 1, node.y].val)
+        {
+            edges.Add(G[node.x + 1, node.y]);
+        }
+        if ((node.y - 1) >= 0 && !G[node.x, node.y - 1].val)
+        {
+            edges.Add(G[node.x, node.y - 1]);
+        }
+
+        if ((node.x - 1) >= 0 && !G[node.x - 1, node.y].val)
+        {
+            edges.Add(G[node.x - 1, node.y]);
+        }
+
+        return edges;
+    }
+
+    //not quite functioning method to flood fill the map to check for isolated caves.
+    int floodNum = 1;
+    public void FloodFill(helper node)
+    {
+        if (board[node.x, node.y])
+                {
+            return;
+                } else
+        {
+            flooded[node.x, node.y].flood = floodNum;
+            FloodFill(flooded[node.x + 1, node.y]);
+            FloodFill(flooded[node.x - 1, node.y]);
+            FloodFill(flooded[node.x, node.y + 1]);
+            FloodFill(flooded[node.x + 1, node.y - 1]);
+            floodNum++;
+        }
+
+    }*/
+
     Vector3 RandomPosition()
     {
         

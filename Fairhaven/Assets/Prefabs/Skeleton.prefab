@@ -166,6 +166,7 @@ MonoBehaviour:
   body: {fileID: 0}
   health: 10
   enemy: {fileID: 2500373770585870356}
+  player: {fileID: 5907973270848858184, guid: 199e66fa288cd8d4a9fd3a5f4bb01d99, type: 3}
   dead: 0
   moveSpeed: 2
 --- !u!114 &2500373770585870362

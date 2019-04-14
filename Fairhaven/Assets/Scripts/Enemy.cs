@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Linq;
 
 public class Enemy : MonoBehaviour
 {
@@ -9,156 +10,218 @@ public class Enemy : MonoBehaviour
     public int health;
     //public Slider HPbar;
     public GameObject enemy;
+    public GameObject player;
     public bool dead = false;
-    public float moveSpeed = 2f;
+    public float moveSpeed = 4f;
     private Animator anim;
+    helper[,] board = new helper[BoardCreator2.width, BoardCreator2.height];
 
-
-    public static helper[,] init()
+    public static helper[,] init(helper[,] G)
     {
-        int width = 20;
-        int height = 20;
-        helper[,] board = new helper[width, height];
 
-        for (int i = 0; i < width; i++)
+
+        for (int i = 0; i < G.GetLength(0); i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < G.GetLength(1); j++)
             {
-                board[i, j] = new helper(i, j);
+                G[i, j] = new helper(i, j);
+                if(BoardCreator2.board[i,j]== false)
+                {
+                    G[i, j].val = false;
+                }
+                
+                else{
+                    G[i, j].val = true;
+                }
             }
         }
-        return board;
+        return G;
     }
+    helper[] array = null;
+    int i = 0;
     // Start is called before the first frame update
     void Start()
     {
+        
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        // Pathing();
+        board = init(board);
+
+        int startx = (int)enemy.transform.position.x;
+        int starty = (int)enemy.transform.position.y;
+        helper start = board[startx, starty];
+
+        int goalx = (int)player.transform.position.x;
+        int goaly = (int)player.transform.position.y;
+        helper goal = new helper(goalx, goaly);
+
+        array = Pathing(board, start, goal);
+        i = array.Length - 1;
+        Debug.Log("i is ? " + i);
     }
 
-    // Update is called once per frame
+
+
+    
+ 
+    int delay = 2;
+    private int movInterval = 10;
+    private int newPathInt = 30;
+    private bool complete = false;
+
+
+   
     void Update()
     {
+        // sets enemy to move along the path every 10 frames rather than every frame
+        if(Time.frameCount%movInterval == 0 && i >0)
+        {
+
+            Debug.Log("i is ? " + i );
+            Vector3 position = new Vector3(array[i].x, array[i].y, 0);
+            Debug.Log("position is ? " + (position));
+            float step = moveSpeed * Time.deltaTime;
+            Debug.Log("step = ? " + step);
+
+            // transform.position = Vector3.MoveTowards(transform.position, position, step);
+            transform.position = position;
+            i--;
+
+        } 
+
+        // non functioning code to make enemy make a new path
+        if(Time.frameCount%newPathInt == 0)
+        {
+ 
+            int newX = (int)enemy.transform.position.x;
+            int newY = (int)enemy.transform.position.y;
+            helper start = board[newX,newY];
+
+            int newGoalX = (int)player.transform.position.x;
+            int newGoalY = (int)player.transform.position.y;
+            helper goal = new helper(newGoalX, newGoalY);
+            Debug.Log("Player position is ? " + newGoalX + ", " + newGoalY);
+
+           // array = Pathing(board, start, goal);
+            Debug.Log(array.Count<helper>());
+            //i = array.Length - 1;
+        }
+
+
+
         if (dead)
         {
             anim.SetTrigger("dead");
         }
+
+
+
+    }
+    //obtains player's position so enemy can make a new path towards them.
+    public void initPathing()
+    {
+
+        int startx = (int)enemy.transform.position.x;
+        int starty = (int)enemy.transform.position.y;
+        helper start = board[startx, starty];
+
+        int goalx = (int)player.transform.position.x;
+        int goaly = (int)player.transform.position.y;
+        helper goal = new helper(goalx, goaly);
+        Debug.Log(goal.x);
+
+        array = Pathing(board, start, goal);
+        i = array.Length - 1;
     }
 
-    //not quite functioning rudimentary AI 
-    public void Pathing()
+    public helper[] Pathing(helper[,] board, helper start, helper goal)
     {
-        helper[,] board = null;
-        board = init();
 
-        int startx = 0;
-        int starty = 0;
-        int goalx = 2;
-        int goaly = 4;
+        
+        start.visited = true;
+        
 
         Queue<helper> queue = new Queue<helper>();
-        board[startx, starty].visited = true;
-        helper start = board[startx, starty];
-        helper goal = new helper(goalx, goaly);
+        
+        
+        Queue<helper> prev = new Queue<helper>();
         queue.Enqueue(start);
-
+        
         while (queue.Count != 0)
         {
             helper v = queue.Dequeue();
-            Debug.Log(v.x + "," + v.y);
-            if (transform.position.x == goal.x && transform.position.y == goal.y)
-            {
-                body.velocity = new Vector2(0,0);
-                break;
-            }
-            Vector3 position = new Vector3(v.x, v.y, 0f);
-            transform.Translate(position);
+            
             v.visited = true;
 
-            helper[] array = new helper[4];
-            if (v.y + 1 < board.GetLength(1))
+            if (v.Equals(goal))
             {
+               
+                prev = FindPath(v, prev);
                 
-                array[0] = board[v.x, v.y + 1];
-                if (!array[0].visited)
-                {
-                    queue.Enqueue(array[0]);
-                    array[0].visited = true;
-                    Debug.Log("go");
-
-                }
-
-            } 
-            else
-            {
-                array[0] = null;
-            }
-            if (v.x - 1 >= 0)
-            {
-                array[1] = board[v.x - 1, v.y];
-                if (!array[1].visited)
-                {
-                    queue.Enqueue(array[1]);
-                    array[1].visited = true;
-                    Debug.Log("go");
-                }
-            }
-            else
-            {
-                array[1] = null;
-            }
-            
-            if (v.y - 1 >= 0)
-            {
-                array[2] = board[v.x, v.y - 1];
-                if (!array[2].visited)
-                {
-                    queue.Enqueue(array[2]);
-                    array[2].visited = true;
-                    Debug.Log("go");
-                }
-
-            }
-            else
-            {
-                array[2] = null;
-            }
-            if (v.x + 1 < board.GetLength(0))
-            {
-                array[3] = board[v.x + 1, v.y];
-                if (!array[3].visited)
-                {
-                    queue.Enqueue(array[3]);
-                    array[3].visited = true;
-                    Debug.Log("go");
-                }
-            }
-            else
-            {
-                array[3] = null;
-            }
-            
-            // I have no idea why this doesn't work in Unity
-           /* for (int i = 0; i < array.Length; i++)
-            {
                 
-                if (array[i] != null)
-                {
-                    if (!array[i].visited)
-                    {
-                        queue.Enqueue(array[i]);
-                        array[i].visited = true;
-                        Debug.Log("go");
+                break;
+            }
 
-                    }
+            
+            List<helper> list = adjacencyList(board, v);
+
+            for (int i = 0; i < list.Count; i++)
+            {
+
+                if (list[i].visited == false)
+                {
+                   
+                    list[i].visited = true;
+                    list[i].setPrevious(v);
+                    
+                    queue.Enqueue(list[i]);
 
                 }
-            }*/
+            }
+
+        }
+        return prev.ToArray();
+
+    }
+    // creates list of edges for use in pathing function
+    public static List<helper> adjacencyList(helper[,] G, helper node)
+    {
+        List<helper> edges = new List<helper>();
+        if ((node.y + 1) < BoardCreator2.height&& !G[node.x, node.y + 1].val)
+        {
+            edges.Add(G[node.x, node.y + 1]);
+        }
+        if ((node.x + 1) < BoardCreator2.width && !G[node.x + 1, node.y].val)
+        {
+            edges.Add(G[node.x + 1, node.y]);
+        }
+        if ((node.y - 1) >= 0 && !G[node.x, node.y - 1].val)
+        {
+            edges.Add(G[node.x, node.y - 1]);
         }
 
+        if ((node.x - 1) >= 0 && !G[node.x - 1, node.y].val)
+        {
+            edges.Add(G[node.x - 1, node.y]);
+        }
 
+        return edges;
+    }
+    public static Queue<helper> FindPath(helper node, Queue<helper> queue)
+    {
+        
+        bool isTrue = node.previous == null;
+        helper newNode = node.previous;
 
+        if (isTrue)
+        {
+            return queue;
+        }
+        else
+        {
+            queue.Enqueue(newNode);
+            return FindPath(newNode, queue);
+        }
     }
     public void TakeDamage(int damage)
     {

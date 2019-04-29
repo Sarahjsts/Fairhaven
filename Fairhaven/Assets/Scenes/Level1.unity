@@ -260,7 +260,7 @@ PrefabInstance:
         type: 3}
       propertyPath: innerWall.Array.data[0]
       value: 
-      objectReference: {fileID: 6328918472717450411, guid: 880ea06d64b444443a679a2997133fbc,
+      objectReference: {fileID: 191234552731046854, guid: 3c70b9b1bd660494f96c6bc9008b1e9f,
         type: 3}
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
@@ -298,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
       propertyPath: numSteps
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
@@ -309,7 +309,7 @@ PrefabInstance:
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
       propertyPath: chanceToStartAlive
-      value: 40
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
@@ -319,7 +319,7 @@ PrefabInstance:
     - target: {fileID: 4268278660970281670, guid: 42d8f0341a4224c48a6db15512e712d1,
         type: 3}
       propertyPath: delete
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42d8f0341a4224c48a6db15512e712d1, type: 3}

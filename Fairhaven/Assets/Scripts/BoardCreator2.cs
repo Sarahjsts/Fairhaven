@@ -31,12 +31,17 @@ public class BoardCreator2 : MonoBehaviour
     }
     private void Awake()
     {
+        bool check = false;
         boardHolder = new GameObject("BoardHolder");
-        CreateBoard();
-        for (int i = 0; i < numSteps; i++)
-        {
-            board = SimStep(board);
-        }
+
+            CreateBoard();
+            for (int i = 0; i < numSteps; i++)
+            {
+                board = SimStep(board);
+            }
+
+        
+
         /*
          * part of non functioning flood fill
         for (int i = 0; i < width; i++)
@@ -54,6 +59,8 @@ public class BoardCreator2 : MonoBehaviour
         Win();
         
     }
+
+    
     // creates a 2d array with values of either true or false depending on a random number
     public void CreateBoard() {
         board = new bool[width, height];

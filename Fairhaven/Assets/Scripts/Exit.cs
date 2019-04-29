@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +21,11 @@ public class Exit : MonoBehaviour
         // loads level 2 when player gets to exit tile
         if(collision.gameObject.name == "Player" && BoardCreator2.enemyCount == 0)
         {
-            SceneManager.LoadScene("Level2");
+            string name = SceneManager.GetActiveScene().name;
+            string justNumbers = new string( name.Where(char.IsDigit).ToArray());
+            int SceneNum = Int32.Parse(justNumbers) + 1;
+           
+            SceneManager.LoadScene("Level" + SceneNum);
         }
         
     }

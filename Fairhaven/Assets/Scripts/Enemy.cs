@@ -42,7 +42,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemy = GameObject.Find(this.name);
+        player = GameObject.Find("Player");
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         board = init(board);
@@ -66,7 +67,7 @@ public class Enemy : MonoBehaviour
  
     int delay = 2;
     private int movInterval = 10;
-    private int newPathInt = 30;
+    private int newPathInt = 25;
     private bool complete = false;
 
 
@@ -77,35 +78,36 @@ public class Enemy : MonoBehaviour
         if(Time.frameCount%movInterval == 0 && i >0)
         {
 
-            Debug.Log("i is ? " + i );
             Vector3 position = new Vector3(array[i].x, array[i].y, 0);
-            Debug.Log("position is ? " + (position));
+
             float step = moveSpeed * Time.deltaTime;
-            Debug.Log("step = ? " + step);
+
 
             // transform.position = Vector3.MoveTowards(transform.position, position, step);
             transform.position = position;
             i--;
 
-        } 
-
-        // non functioning code to make enemy make a new path
-        if(Time.frameCount%newPathInt == 0)
+        }
+        if (Time.frameCount % newPathInt == 0 && i <=0)
         {
- 
+            Debug.Log("print");
+            board = init(board);
             int newX = (int)enemy.transform.position.x;
             int newY = (int)enemy.transform.position.y;
-            helper start = board[newX,newY];
+            helper start = board[newX, newY];
 
             int newGoalX = (int)player.transform.position.x;
             int newGoalY = (int)player.transform.position.y;
             helper goal = new helper(newGoalX, newGoalY);
-            Debug.Log("Player position is ? " + newGoalX + ", " + newGoalY);
+            Debug.Log("Player position is ? " + newX + ", " + newY);
 
-           // array = Pathing(board, start, goal);
-            Debug.Log(array.Count<helper>());
-            //i = array.Length - 1;
+            array = Pathing(board, start, goal);           
+            i = array.Length - 1;
+            Debug.Log(" array  length is " + i);
         }
+
+        // non functioning code to make enemy make a new path
+
 
 
 
@@ -134,7 +136,7 @@ public class Enemy : MonoBehaviour
         i = array.Length - 1;
     }
 
-    public helper[] Pathing(helper[,] board, helper start, helper goal)
+    public static helper[] Pathing(helper[,] board, helper start, helper goal)
     {
 
         
@@ -152,7 +154,7 @@ public class Enemy : MonoBehaviour
             helper v = queue.Dequeue();
             
             v.visited = true;
-
+            Debug.Log(v.x);
             if (v.Equals(goal))
             {
                
@@ -167,10 +169,10 @@ public class Enemy : MonoBehaviour
 
             for (int i = 0; i < list.Count; i++)
             {
-
+                
                 if (list[i].visited == false)
                 {
-                   
+                    Debug.Log(list[i].y);
                     list[i].visited = true;
                     list[i].setPrevious(v);
                     

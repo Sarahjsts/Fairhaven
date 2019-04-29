@@ -11,6 +11,12 @@ public class Enemy : MonoBehaviour
     //public Slider HPbar;
     public GameObject enemy;
     public GameObject player;
+    static public int HP = 100;
+    static public int MP;
+    static public int Att;
+    static public int Def;
+    static public int Mag;
+    static public int Mdef;
     public bool dead = false;
     public float moveSpeed = 4f;
     private Animator anim;
@@ -88,7 +94,7 @@ public class Enemy : MonoBehaviour
             i--;
 
         }
-        if (Time.frameCount % newPathInt == 0 && i <=0)
+        if (Time.frameCount % newPathInt == 0 && i <=0 && !dead)
         {
             Debug.Log("print");
             board = init(board);

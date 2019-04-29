@@ -32,40 +32,47 @@ public class InitGame : MonoBehaviour
         dbcon.Open();
         IDbCommand dbcmd = dbcon.CreateCommand();
         string databaseCreation = @"DROP TABLE IF EXISTS [GameSave];
-                CREATE TABLE [GameSave] (
-                        [SaveID] INTEGER NOT NULL PRIMARY KEY,
-                        [SceneName] VARCHAR(50) 
-                );
+CREATE TABLE [GameSave] (
+        SaveID INTEGER PRIMARY KEY AUTOINCREMENT,
+        SceneName VARCHAR(50));
 
-                DROP TABLE IF EXISTS [Player];
-                CREATE TABLE [Player] (
-                        [PlayerID] INTEGER NOT NULL PRIMARY KEY,
-                        [PlayerHp] INTEGER,
-                        [PlayerMp] INTEGER,
-                        [PlayerAtt] INTEGER,
-                        [PlayerDef] INTEGER,
-                        [PlayerMag] INTEGER,
-                        [PlayerMdef] INTEGER,
-                        FOREIGN KEY(PlayerID) REFERENCES GameSave(SaveID)
-                );
+DROP TABLE IF EXISTS [Player];
+CREATE TABLE [Player] (
+        PlayerID INTEGER PRIMARY KEY AUTOINCREMENT,
+        PlayerHP INT,
+        PlayerMP INT,
+        PlayerAtt INT,
+        PlayerDef INT,
+        PlayerMag INT,
+        PlayerMdef INT,
+        
+        FOREIGN KEY(PlayerID) REFERENCES GameSave(SaveID)
+);
 
-                DROP TABLE IF EXISTS [Npc];
-                CREATE TABLE [Npc] (
-                        [NPCID] INTEGER NOT NULL PRIMARY KEY,
-                        [NPCHp] INTEGER NOT NULL,
-                        [NPCMp] INTEGER NOT NULL,
-                        [NPCAtt] INTEGER NOT NULL,
-                        [NPCDef] INTEGER NOT NULL,
-                        [NPCMag] INTEGER NOT NULL,
-                        [NPCMdef] INTEGER NOT NULL
-                );
+DROP TABLE IF EXISTS [Npc];
+CREATE TABLE [Npc] (
+        NPCID INTEGER PRIMARY KEY AUTOINCREMENT,
+        NPCHP INT,
+        NPCMP INT,
+        NPCAtt INT,
+        NPCDef INT,
+        NPCMag INT,
+        NPCMdef INT
+);
+DROP TABLE IF EXISTS [Items];
+CREATE TABLE [Items] (
+        ItemID INT,
+        ItemEffect VARCHAR(50)
+);
 
-                DROP TABLE IF EXISTS [Items];
-                CREATE TABLE [Items](
-                        [ItemID] INTEGER NOT NULL PRIMARY KEY,
-                        [ItemEffect] VARCHAR(50)
+INSERT INTO [Npc] (NPCHP, NPCMP, NPCAtt, NPCDef, NPCMag, NPCMdef) VALUES
+(10, 5, 2, 2, 2, 2);
 
-                );";
+INSERT INTO [Npc] (NPCHP, NPCMP, NPCAtt, NPCDef, NPCMag, NPCMdef)VALUES
+(20, 3, 7, 1, 1, 1);
+
+INSERT INTO [Npc] (NPCHP, NPCMP, NPCAtt, NPCDef, NPCMag, NPCMdef)VALUES
+(30, 4, 2, 2, 8, 3);";
         dbcmd.CommandText = databaseCreation;
         dbcmd.ExecuteNonQuery();
         init = true;
@@ -73,26 +80,5 @@ public class InitGame : MonoBehaviour
         dbcon.Close();
     }
 
-    void SaveGame()
-    {
-        string connectionString = "URI=file:" + Application.persistentDataPath + "game.db";
-        IDbConnection dbcon = new SqliteConnection(connectionString);
-        dbcon.Open();
-        IDbCommand dbcmd = dbcon.CreateCommand();
-        //string overWriteSave = "UPDATE [GameSave] " +
-        //"SET [SceneName] = " + EditorSceneManager.GetActiveScene().name;
-        //"WHERE [SaveID] = " + BoardCreator2.ID + ";";
-        string newSave = "INSERT INTO GameSave VALUES (1, 'Level1')";
-        //SqliteParameter str = new SqliteParameter("@Level", EditorSceneManager.GetActiveScene().name);
-        //dbcmd.Parameters.Add(str);
-       
-            dbcmd.CommandText = newSave;
-            dbcmd.ExecuteNonQuery();
-            Debug.Log("counter 1");
-            
 
-        dbcmd.Dispose();
-        dbcon.Close();
-        Debug.Log("save complete");
-    }
 }

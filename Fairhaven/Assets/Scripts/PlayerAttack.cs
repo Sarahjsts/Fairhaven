@@ -22,8 +22,23 @@ public class PlayerAttack : MonoBehaviour
                 Collider2D[] dmgEnemies = Physics2D.OverlapCircleAll(position.position, range, enemies);
                 for(int i = 0; i < dmgEnemies.Length; i++)
                 {
-                    dmgEnemies[i].GetComponent<Enemy>().TakeDamage(dmg);
-                    Debug.Log(dmgEnemies[i].GetComponent<Enemy>().health);
+                    if(dmgEnemies[i].GetComponent<Enemy>().health > 0 && !dmgEnemies[i].GetComponent<Enemy>().dead)
+                    {
+                        dmgEnemies[i].GetComponent<Enemy>().health -= dmg;
+                        Debug.Log(dmgEnemies[i].GetComponent<Enemy>().name);
+                    } else
+                    {
+                        Debug.Log("enemy count" + BoardCreator2.enemyCount);
+                        
+                        if (BoardCreator2.enemyCount > 0 && !dmgEnemies[i].GetComponent<Enemy>().dead )
+                        {
+                            BoardCreator2.enemyCount--;
+                            dmgEnemies[i].GetComponent<Enemy>().dead = true;
+                        }
+                        
+                        
+                    }
+                    
                 }
             }
             globalCoolDown = timeDelay;

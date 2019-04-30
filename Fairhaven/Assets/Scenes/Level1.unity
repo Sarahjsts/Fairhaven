@@ -341,10 +341,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: effbbe4d7ecbbe8418de38a2f53d8e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loss: 0
-  exit: {fileID: 5540715949542461998, guid: 6f7d929feffe96e4092ac691b0bd66b8, type: 3}
-  won: 0
-  num: 0
 --- !u!1001 &606264591985939588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -660,6 +656,11 @@ PrefabInstance:
         type: 3}
       propertyPath: range
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930816714029475187, guid: 199e66fa288cd8d4a9fd3a5f4bb01d99,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 199e66fa288cd8d4a9fd3a5f4bb01d99, type: 3}

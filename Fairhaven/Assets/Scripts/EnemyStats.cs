@@ -14,7 +14,7 @@ public class EnemyStats : MonoBehaviour
     void Start()
     {
         InitStats();
-        Enemy.HP = enemyStats[0];
+        //Enemy.HP = enemyStats[0];
         Enemy.MP = enemyStats[1];
         Enemy.Att = enemyStats[2];
         Enemy.Def = enemyStats[3];

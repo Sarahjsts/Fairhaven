@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BoardCreator2 : MonoBehaviour
+public class BoardCreator2: MonoBehaviour
 {
     private GameObject boardHolder;
     // Start is called before the first frame update
@@ -20,11 +20,11 @@ public class BoardCreator2 : MonoBehaviour
     public GameObject[] floor;
     public GameObject[] enemies;
     public GameObject exit;
-    public static  int enemyCount;
+    public static int enemyCount;
     public bool won = false;
     public static bool[,] board;
     helper[,] flooded;
- 
+
     void Start()
     {
 
@@ -34,13 +34,13 @@ public class BoardCreator2 : MonoBehaviour
         bool check = false;
         boardHolder = new GameObject("BoardHolder");
 
-            CreateBoard();
-            for (int i = 0; i < numSteps; i++)
-            {
-                board = SimStep(board);
-            }
+        CreateBoard();
+        for (int i = 0; i < numSteps; i++)
+        {
+            board = SimStep(board);
+        }
 
-        
+
 
         /*
          * part of non functioning flood fill
@@ -55,27 +55,29 @@ public class BoardCreator2 : MonoBehaviour
         Fix();
         */
         BoardTiles();
-        LayoutObjectAtRandom(enemies, 1, 1);
+        LayoutObjectAtRandom(enemies, 2, 2);
+    }
+    public void Update()
+    {
         Win();
-        
     }
 
-    
     // creates a 2d array with values of either true or false depending on a random number
-    public void CreateBoard() {
+    public void CreateBoard()
+    {
         board = new bool[width, height];
         flooded = new helper[width, height];
 
         for (int i = 0; i < width; i++)
         {
-            for(int j = 0; j < height; j++)
+            for (int j = 0; j < height; j++)
             {
                 int filled = Random.Range(0, 100);
-                if(filled < chanceToStartAlive)
+                if (filled < chanceToStartAlive)
                 {
                     board[i, j] = true;
                 }
-                flooded[i, j] = new helper(i,j);
+                flooded[i, j] = new helper(i, j);
             }
         }
     }
@@ -83,17 +85,17 @@ public class BoardCreator2 : MonoBehaviour
     // takes created array board, and places tiles on game board
     public void BoardTiles()
     {
-             for (int i = 0; i < width; i++)
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                InstantiateFromArray(floor, i, j);
+                if (board[i, j] == true)
                 {
-                    for (int j = 0; j < height; j++)
-                    {
-                        InstantiateFromArray(floor, i, j);
-                        if (board[i, j] == true)
-                        {
-                            InstantiateFromArray(innerWall, i, j);
-                        }
-                    }
+                    InstantiateFromArray(innerWall, i, j);
                 }
+            }
+        }
 
         InstantiateOuterWalls();
 
@@ -101,7 +103,7 @@ public class BoardCreator2 : MonoBehaviour
     }
 
     // counts neighbors for purpose of cellular automata
-    int CountNeighbors(bool[,] board, int x,int y)
+    int CountNeighbors(bool[,] board, int x, int y)
     {
         int count = 0;
         for (int i = -1; i < 2; i++)
@@ -114,12 +116,12 @@ public class BoardCreator2 : MonoBehaviour
                 {
 
                 }
-                else if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor >= board.GetLength(0) || yNeighbor >= board.GetLength(1)) 
+                else if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor >= board.GetLength(0) || yNeighbor >= board.GetLength(1))
                 {
                     count = count + 1;
                 }
-              
-                else if (board[xNeighbor,yNeighbor] == true)
+
+                else if (board[xNeighbor, yNeighbor] == true)
                 {
                     count = count + 1;
                 }
@@ -131,12 +133,12 @@ public class BoardCreator2 : MonoBehaviour
     bool[,] SimStep(bool[,] board)
     {
         bool[,] newBoard = new bool[width, height];
-        for(int i =0; i < board.GetLength(0); i++)
+        for (int i = 0; i < board.GetLength(0); i++)
         {
-            for(int j = 0; j< board.GetLength(1); j++)
+            for (int j = 0; j < board.GetLength(1); j++)
             {
                 int num = CountNeighbors(board, i, j);
-                if (board[i,j] == false)
+                if (board[i, j] == false)
                 {
                     if (num < delete)
                     {
@@ -146,7 +148,8 @@ public class BoardCreator2 : MonoBehaviour
                     {
                         newBoard[i, j] = false;
                     }
-                } else
+                }
+                else
                 {
                     if (num > create)
                     {
@@ -208,10 +211,10 @@ public class BoardCreator2 : MonoBehaviour
 
     Vector3 RandomPosition()
     {
-        
+
         int randomX = Random.Range(4, width);
         int randomY = Random.Range(4, height);
-       
+
         Vector3 randomPosition = new Vector3(randomX, randomY);
 
         return randomPosition;
@@ -223,14 +226,18 @@ public class BoardCreator2 : MonoBehaviour
     {
         //Choose a random number of objects to instantiate within the minimum and maximum limits
         enemyCount = Random.Range(minimum, maximum + 1);
-
         //Instantiate objects until the randomly chosen limit objectCount is reached
         for (int i = 0; i < enemyCount; i++)
         {
-           
+
             Vector3 randomPosition = RandomPosition();
             GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
+
+            string holder = tileChoice.name;
+            tileChoice.name = tileChoice.name + i;
+            
             Instantiate(tileChoice, randomPosition, Quaternion.identity);
+            tileChoice.name = holder;
         }
     }
     //puts outer wall on level
@@ -291,7 +298,7 @@ public class BoardCreator2 : MonoBehaviour
 
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, 0f);
-        
+
 
         // Create an instance of the prefab from the random index of the array.
         GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
@@ -301,11 +308,11 @@ public class BoardCreator2 : MonoBehaviour
     }
     void Win()
     {
-        
-        if (BoardCreator2.enemyCount <= 0 && !won)
+        if (enemyCount <= 0 && !won)
         {
-            Debug.Log(BoardCreator2.enemyCount);
-            exit.SetActive(true);
+            Vector3 defaultPos = new Vector3(width - 1, height - 1);
+            exit.transform.position = defaultPos;
+            GameObject tileInstance = Instantiate(exit, defaultPos, Quaternion.identity) as GameObject;
             won = true;
         }
     }
